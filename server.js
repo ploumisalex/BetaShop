@@ -11,13 +11,12 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 const { resolveInclude } = require('ejs')
-const port = process.env.PORT || 4000
 
 //connect to mongodb
 const mongoose = require('mongoose')
 const dburi = "mongodb+srv://fakelos:adminofakelos@customersdb.gjnea.mongodb.net/customers_table?retryWrites=true&w=majority"
 mongoose.connect(dburi,{useNewUrlParser: true, useUnifiedTopology: true}).then((result)=>{
-    app.listen(port)
+    app.listen(process.env.PORT || 4000)
 }).catch((err)=>{
     console.log(err)
 })
