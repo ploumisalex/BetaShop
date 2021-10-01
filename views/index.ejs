@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="css/header_footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <header>
+        <div id="header_div">
+            <span id="fakelos">Fakelos</span>
+            <% if (name != null) { %>
+                <span id="user_name">Hello, <%= name %></span>
+                <form action="/logout?_method=DELETE" method="POST" id="logout_form">
+                    <button id="logout_button" type="submit">Log Out</button>
+                </form>
+            <% }else{ %>
+                <a href="/register" class="acc_buttons">Register</a>
+                <a href="/login" class="acc_buttons">Login</a>
+            <% } %>
+            <div class="cart"><a href="/cart"><img src="imgs/cart.png"></a></div>
+        </div>  
+        <ul class="nav_bar">
+            <a class="nav_ref" href="/storage?category=jewelery">Jewelery</a>
+            <a class="nav_ref" href="/storage?category=electronics">Electronics</a>
+            <a class="nav_ref" href="/storage?category=men's clothing">Men's Clothing</a>
+            <a class="nav_ref" href="/storage?category=women's clothing">Women's Clothing</a>   
+            <div class="search">
+                <input type="number" placeholder="Product id" id="id_value"><br>
+                <button id="search_button" onclick="search_function()">Search</button>
+            </div>        
+        </ul> 
+    </header>
+    <div id="content">
+        <div id="disclaimer">
+            <p>Disclaimer! This website doesn't actually sell anything, it's just a project on making a fully functional website!
+            </p>
+        </div>
+        <div class="contains">
+            <p>This project website, works on a Nodejs Express server.</p>
+            <p>Registered Users are saved in a MongoDB database with encrypted passwords. When they try to login, the server checks the db for the email given,if it exists
+                and the password now temporarily decrypted is equal to the password given in the login form then the user logins successfully.
+            </p>
+            <p>Every item shown in this website is fetched from the Fake Store Api. There are only 20 available products.</p>
+            <p>The search functionality works only with the product ids(1 to 20). The API doesnt support searching for a string that matches the name or the description
+                of the product, and fetching every product every time someone searches something and then later check every title and description is a little silly.
+            </p>
+            <p>The Contact form works as expected, saves every customer message in a MongoDB table and redirects the user to the home page.
+            </p>
+            <p>The related products,are consisted of 3 random products from the same category. There are 4 categories as is shown in the navigation bar.</p>
+            <p>The customer can only add items to the cart if he is logged in.</p>
+            <p>When the customer adds a product in their cart, the 'cart' field in the MongoDB table is updated. The 'cart' field is an array consisting
+                of json objects {product_id,count}. So whenever a product is added to the cart, the product id and the number of items is pushed in the array.
+            </p>
+            <p>When the customer deletes an item from the cart, the table in MongoDB is updated and then the customer is redirected to the Cart page with the product removed.</p>
+        </div>
+        <div class="future">
+            <label>Will be added in the future:</label>
+            <p>The website will undergo a lot of design changes.</p>
+            <p>Proper search functionality. The customer can enter a keyword, and the server will return a list of the items that matched that keyword.</p>
+            <p>The server will send an email to the customer that filled the contact form to reaffirm them of the arrival of their message.</p>
+            <p>Product reviews will be added. Customers can rate and review a product and then other customers will be able to read them.</p>
+            <p>Proper product database with much more than 20 products. Still fake products but with more realistic data.</p>
+            <p>Proper register form, that checks if the customer already exists or if the email already exists.</p>
+            <p>Account settings.</p>
+            <p>More pages with different stuff.</p>
+        </div>
+
+    </div>
+    <footer class="footer">
+        <div id="upper_footer">
+            <div class="who">
+                <label>Who Am I</label>
+                <p>I am a senior student at the University of Macedonia on the apartment of Applied Informatics.</p>
+            </div>
+            <div class="offer">
+                <label>What Can I Offer(with reasonable scale)</label>
+                <ul>
+                    <li><p>Web Development and Design</p></li>
+                    <li><p>Software Development and Design</p></li>
+                    <li><p>Game Development and Design</p></li>
+                    <li><p>Absolutely Everything</p></li>
+                </ul>
+            </div>
+            <div id="contact_socials">
+                <a id="contact" href="/contact">Contact Me</a>
+                <ul class="socials">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+                </ul>
+
+            </div>
+        </div>
+        <div id="copyright">
+            <p>Copyright &copy fakelos</p>
+        </div>
+
+    </footer>
+    <script src="js/index.js"></script>  
+</body>
+</html>

@@ -1,0 +1,275 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    font-family: "Quicksand",sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+html{
+    height: 100%;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    /*background: url("../imgs/background.png");
+    background-repeat: repeat-y;*/
+}
+
+header{
+    display:flex;
+    flex-direction: column;
+    background: black;
+}
+
+#header_div{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 80px;
+    padding:10px 0px;
+}
+#fakelos{
+    flex: 7;
+    font-size: 24px;
+    color:white;
+}
+
+#user_name{
+    flex: 1;
+    text-align: center;
+    color:white;
+}
+
+#logout_form{
+    flex: 1;
+}
+
+#logout_button{
+    padding: 0px 10px;
+}
+
+.nav_bar{
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding:10px 0px;
+    background:#1F2B3A;
+}
+
+.acc_buttons{
+    margin: 0px 16px;
+    color: white;
+    text-decoration: underline;
+}
+
+.cart{
+    margin: 0px 16px;
+    padding: 4px;
+    border: 4px solid black;
+}
+
+.cart img{
+    display: block;
+    margin: auto;
+}
+
+.cart:hover{
+    border: 4px solid white;
+    border-radius: 10px;
+}
+
+
+.nav_bar button{
+    padding: 0px 10px;
+    margin: 0px 5px;
+}
+.search{
+    display: flex;
+}
+
+.search input[type=submit],.search input[type=number]{
+    padding: 0px 5px;
+    
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#login_div{
+    border-radius: 4px;
+    margin: 50px auto;
+    background: #F7F7F7;
+    border: 3px solid black;
+    padding: 10px;
+}
+
+.login_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+.login_form label{
+    margin-top: 10px;
+}
+
+.login_form input[type=email],.login_form input[type=password],.register_form input[type=email],.register_form input[type=password],.register_form input[type=text]{
+    width: 100%;
+    padding: 8px 12px;
+    margin: 16px 40px;
+}
+
+.login_form button,.register_form button{
+    margin-top: 40px;
+    width: 100%;
+    padding: 4px 8px;
+}
+
+.login_form a,.register_form a{
+    text-decoration: underline;
+    margin-top: 40px;
+}
+
+#register_div{
+    border-radius: 4px;
+    margin: 50px auto;
+    background: #F7F7F7;
+    border: 3px solid black;
+    padding: 10px;
+}
+
+.register_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+#content{
+    width:1400px;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#disclaimer{
+    padding: 20px;
+}
+
+#access{
+    text-align: center;
+}
+
+.nav_ref{
+    padding: 0px 20px;
+    text-decoration: none;
+    color: white;
+}
+
+.footer{
+    margin-top: auto;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1F2B3A;
+    color:white;
+}
+
+#upper_footer{
+    flex: 3;
+    display: flex;
+}
+
+#copyright{
+    flex: 1;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0px;
+    margin-top: 10px;
+    background:black;
+}
+
+
+.socials{
+    display: flex;
+    list-style-type: none;
+}
+
+.socials a{
+    margin: 10px 0px;
+}
+
+.socials li{
+    margin: 10px 10px;
+}
+
+#contact_socials{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 10px;
+}
+
+.socials i{
+    color:white;
+    font-size: 24px;
+}
+
+#contact{
+    color:white;
+    margin: 10px 0px;
+    font-size: 24px;
+}
+
+.socials{
+    display:flex;
+}
+
+.who{
+    display: flex;
+    flex-direction: column;
+    margin: 0px 10px;
+    flex: 1;
+    align-items: center;
+}
+
+.who label{
+    font-size: 24px;
+    margin: 10px 0px;
+}
+
+.offer{
+    flex: 1;
+    align-items:center;
+    display: flex;
+    flex-direction: column;
+    margin: 0px 10px;
+}
+
+.offer label{
+    font-size: 24px;
+    margin: 10px 0px;
+}
+
+.offer ul{
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+}
+
+.offer li{
+    margin: 4px 0px;
+}

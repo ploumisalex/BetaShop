@@ -1,0 +1,23 @@
+.contains{
+    display:flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.contains p{
+    margin: 5px 0px;
+}
+
+.future{
+    display:flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.future label{
+    text-decoration: underline;
+ }
+
+ .future p {
+     margin: 5px 0px;
+ }

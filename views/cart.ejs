@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="css/header_footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+    <header>
+        <div id="header_div">
+            <span id="fakelos">Fakelos</span>
+            <% if (name != null) { %>
+                <span id="user_name">Hello, <%= name %></span>
+                <form action="/logout?_method=DELETE" method="POST" id="logout_form">
+                    <button id="logout_button" type="submit">Log Out</button>
+                </form>
+            <% }else{ %>
+                <a href="/register" class="acc_buttons">Register</a>
+                <a href="/login" class="acc_buttons">Login</a>
+            <% } %>
+            <a href="/cart" class="cart"><img src="imgs/cart.png"></a>
+
+        </div>  
+        <ul class="nav_bar">
+            <a class="nav_ref" href="/storage?category=jewelery">Jewelery</a>
+            <a class="nav_ref" href="/storage?category=electronics">Electronics</a>
+            <a class="nav_ref" href="/storage?category=men's clothing">Men's Clothing</a>
+            <a class="nav_ref" href="/storage?category=women's clothing">Women's Clothing</a>   
+            <div class="search">
+                <input type="number" placeholder="Product id" id="id_value"><br>
+                <button id="search_button" onclick="search_function()">Search</button>
+            </div>       
+            <a class="nav_ref" href="/contact">Contact Us</a> 
+        </ul> 
+    </header>
+    <div id="content">
+        <div id="disclaimer">
+            <p>Disclaimer! This website doesn't actually sell anything, it's just a project on making a fully functional website!</p>
+        </div>
+        <p id="cart_var" hidden><%= JSON.stringify(cart) %></p>
+        <ul id="cart_products">
+            
+        </ul>
+        <form method="POST" class="proceed">
+            <label id="total_label">The total of your items is: <label id="total_ul">0.00</label> $</label>
+            <button type="submit">Proceed to checkout!</button>
+        </form>
+    </div>
+    <footer class="footer">
+        <div id="upper_footer">
+            <div class="who">
+                <label>Who Am I</label>
+                <p>I am a senior student at the University of Macedonia on the apartment of Applied Informatics.</p>
+            </div>
+            <div class="offer">
+                <label>What Can I Offer(with reasonable scale)</label>
+                <ul>
+                    <li><p>Web Development and Design</p></li>
+                    <li><p>Software Development and Design</p></li>
+                    <li><p>Game Development and Design</p></li>
+                    <li><p>Absolutely Everything</p></li>
+                </ul>
+            </div>
+            <div id="contact_socials">
+                <a id="contact" href="/contact">Contact Me</a>
+                <ul class="socials">
+                    <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                    <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+                </ul>
+
+            </div>
+        </div>
+        <div id="copyright">
+            <p>Copyright &copy fakelos</p>
+        </div>
+
+    </footer>
+    <script src="js/cart.js"></script>  
+</body>
+</html>
