@@ -22,6 +22,7 @@
                 <a href="/register" class="acc_buttons">Register</a>
                 <a href="/login" class="acc_buttons">Login</a>
             <% } %>
+            <p id="reviews_p" hidden><%=JSON.stringify(reviews)%></p>
             <a href="/cart" class="cart"><img src="imgs/cart.png"></a>
         </div>  
         <ul class="nav_bar">
@@ -49,6 +50,47 @@
             <ul id="related_ul">
 
             </ul>
+        </div>
+        <div id="reviews">
+            <div id="leave_review">
+                <label id="leave_review_label">Share your experience!</label>
+                <labe id="rating_label">1. Rating</labe>
+                <ul class="stars">
+                    <label>
+                        <input type="radio" name="radio" onclick="fill(1)" checked>
+                        <img id="st1" src="imgs/star.png">
+                    </label>
+                    <label>
+                        <input type="radio" name="radio" onclick="fill(2)">
+                        <img id="st2" src="imgs/star_1.png">
+                    </label>
+                    <label>
+                        <input type="radio" name="radio" onclick="fill(3)">
+                        <img id="st3" src="imgs/star_1.png">
+                    </label>
+                    <label>
+                        <input type="radio" name="radio" onclick="fill(4)">
+                        <img id="st4" src="imgs/star_1.png">
+                    </label>
+                    <label>
+                        <input type="radio" name="radio" onclick="fill(5)">
+                        <img id="st5" src="imgs/star_1.png">
+                    </label>
+                </ul>
+                <label id="comment_label">2. Comments</label>
+                <form class="review_form" method="POST" action="/product?review=true">
+                    <input type="hidden" id="radio_value" name="rv" value="">
+                    <input type="hidden" id="product_id_input" name="pid" value="">
+                    <textarea name="text" rows="3" maxlength="350" required></textarea>
+                    <button type="submit">Review this product!</button>
+                </form>
+            </div>
+            <div class="see_reviews">
+                <button id="show_all_reviews" onclick="show_reviews()">See other customer reviews!</button>
+                <ul id="all_reviews">
+
+                </ul>
+            </div>
         </div>
     </div>
     <footer class="footer">

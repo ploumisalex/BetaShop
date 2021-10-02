@@ -12,6 +12,8 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const { resolveInclude } = require('ejs')
 
+const main_categories=["hobby","technology","fashion"]
+
 //connect to mongodb
 const mongoose = require('mongoose')
 const dburi = "mongodb+srv://fakelos:adminofakelos@customersdb.gjnea.mongodb.net/customers_table?retryWrites=true&w=majority"
@@ -22,6 +24,8 @@ mongoose.connect(dburi,{useNewUrlParser: true, useUnifiedTopology: true}).then((
 })
 const Customer = require("./models/customers")
 const Message = require("./models/messages.js")
+const Review = require("./models/reviews.js")
+const Product = require("./models/products.js")
 
 //initialize passport for login auth
 initialize_passport(
@@ -43,6 +47,18 @@ async function findUser(email){
     })
 }
 
+async function getReviewsByPId(pid){
+    return new Promise((resolve,reject)=>{
+        const query = Review.find({ 'product_id': pid},{_id: 0,customer_id: 1, review: 1,stars :1 })
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
+}
+
 async function findUserId(id){
     return new Promise((resolve, reject) => {
         const query = Customer.findById(id);
@@ -52,6 +68,30 @@ async function findUserId(id){
                 reject(err);
             }
             resolve(result);
+        })
+    })
+}
+
+async function getUsernameById(id){
+    return new Promise((resolve,reject)=>{
+        const query = Customer.find({ '_id': id},{_id: 0,username: 1 })
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result[0].username)
+        })
+    })
+}
+
+async function getSubCategoriesFromCategory(cat){
+    return new Promise((resolve,reject)=>{
+        const query = Product.distinct('sub_category',{'category': cat})
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
         })
     })
 }
@@ -95,7 +135,10 @@ app.get('/register', checkNotAuthenticated , (req,res)=>{
     res.render('register.ejs')
 })
 
-app.get('/storage', (req,res)=>{
+app.get('/storage', async (req,res)=>{
+    if(main_categories.includes("fashion")){
+        let temp = await getSubCategoriesFromCategory("fashion")
+    }
     if (req.isAuthenticated()){
         res.render('storage.ejs', {category:req.query.category , name : req.user.username})
     }else{
@@ -103,24 +146,46 @@ app.get('/storage', (req,res)=>{
     }
 })
 
-app.get('/product', (req,res)=>{
+app.get('/product', async (req,res)=>{
+    var temp = await getReviewsByPId(req.query.product_id)
+    for (let i = 0; i < temp.length; i++) {
+        temp[0].customer_id = await getUsernameById(temp[0].customer_id)
+    }
     if (req.isAuthenticated()){
-        res.render('product.ejs', {product_id:req.query.product_id , name : req.user.username})
+        res.render('product.ejs', {product_id:req.query.product_id , name : req.user.username, reviews : temp})
     }else{
-        res.render('product.ejs', {product_id:req.query.product_id , name : null})
+        res.render('product.ejs', {product_id:req.query.product_id , name : null , reviews: temp})
     }
 })
 
 app.post('/product',(req,res)=>{
     if (req.isAuthenticated()){
-        Customer.updateOne({'_id' : req.user.id},
+        if(typeof(req.query.review) !== 'undefined'){
+            let review = new Review({
+                customer_id : req.user.id,
+                product_id : req.body.pid,
+                review : req.body.text,
+                stars : req.body.rv
+            })
+            review.save().then(()=>{
+                res.redirect('/product?product_id='+req.body.pid)
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }else{
+            Customer.updateOne({'_id' : req.user.id},
             {$push: {'cart': {prod_id:req.query.product_id,count:req.body.ammount}}}).then(()=>{
                 res.render('product.ejs', {product_id:req.query.product_id , name : req.user.username})
             }).catch((err)=>{
                 console.log(err)
             })
+        }
     }else{
-        res.render('product.ejs', {product_id:req.query.product_id , name : null})
+        if(typeof(req.query.review) !== 'undefined'){
+            res.render('login.ejs')
+        }else{
+            res.render('product.ejs', {product_id:req.query.product_id , name : null})
+        }
     }
 })
 app.post('/register', checkNotAuthenticated , async (req,res)=>{
@@ -212,3 +277,23 @@ function checkNotAuthenticated(req,res,next){
     next()
 
 }
+
+
+/*for (let i = 0; i < fake_products.length; i++) {
+        let product = new Product({
+            category : fake_products[i].category,
+            sub_category : fake_products[i].sub_category,
+            title : fake_products[i].title,
+            price : fake_products[i].price,
+            manufacturer : fake_products[i].manufacturer,
+            description : fake_products[i].description,
+            rating: fake_products[i].rating,
+            img : fake_products[i].img,
+            stock : fake_products[i].stock,
+        });
+        product.save().then(()=>{
+            console.log("komple mallon")
+        }).catch((err)=>{
+            console.log(err);
+        });
+      }*/

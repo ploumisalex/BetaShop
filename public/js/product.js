@@ -1,3 +1,10 @@
+var star_1 = document.getElementById("st1");
+var star_2 = document.getElementById("st2");
+var star_3 = document.getElementById("st3");
+var star_4 = document.getElementById("st4");
+var star_5 = document.getElementById("st5");
+var reviews_p = JSON.parse(document.getElementById("reviews_p").innerHTML);
+var reviews_ul = document.getElementById("all_reviews");
 
 var product_ul = document.getElementById("product_info");
 var product_id = document.getElementById("access").innerHTML;
@@ -21,6 +28,7 @@ async function fetch_product(id){
         jsonData = await resp.json();
     }
     if(jsonData != null){
+        console.log(jsonData);
         create_and_show_product(jsonData);
         product_category = jsonData.category;
         show_related_products(product_category);
@@ -101,5 +109,71 @@ function add_related_product(prod){
 }
 
 
+function fill(num){
+    document.getElementById("radio_value").value = num;
+    switch(num) {
+        case 1:
+          star_1.src = "./imgs/star.png";
+          star_2.src = "./imgs/star_1.png";
+          star_3.src = "./imgs/star_1.png";
+          star_4.src = "./imgs/star_1.png";
+          star_5.src = "./imgs/star_1.png";
+        break;
+        case 2:
+          star_1.src = "./imgs/star.png";
+          star_2.src = "./imgs/star.png";
+          star_3.src = "./imgs/star_1.png";
+          star_4.src = "./imgs/star_1.png";
+          star_5.src = "./imgs/star_1.png";
+        break;
+        case 3:
+          star_1.src = "./imgs/star.png";
+          star_2.src = "./imgs/star.png";
+          star_3.src = "./imgs/star.png";
+          star_4.src = "./imgs/star_1.png";
+          star_5.src = "./imgs/star_1.png";
+        break;
+        case 4:
+          star_1.src = "./imgs/star.png";
+          star_2.src = "./imgs/star.png";
+          star_3.src = "./imgs/star.png";
+          star_4.src = "./imgs/star.png";
+          star_5.src = "./imgs/star_1.png";
+        break;
+        case 5:
+          star_1.src = "./imgs/star.png";
+          star_2.src = "./imgs/star.png";
+          star_3.src = "./imgs/star.png";
+          star_4.src = "./imgs/star.png";
+          star_5.src = "./imgs/star.png";
+        break;
+      }
+}
+
+function show_reviews(){
+    if(reviews_p.length == 0){
+        var temp = document.createElement("li");
+        temp.innerHTML = "<li>There are no reviews of this product. Review this item first!</li>"
+        reviews_ul.appendChild(temp);
+    }else{
+        for (let i = 0; i < reviews_p.length; i++) {
+            show_single_review(reviews_p[i])
+          }
+    }
+}
+
+function show_single_review(data){
+    const temp = document.createElement("li");
+    temp.innerHTML = "<li class='review_li'>"
+    + "<label>Customer "+ data.customer_id +" gave this product "+ data.stars +" out of 5 stars!</label>"
+    + "<textarea rows='3' readonly>"+ data.review+"</textarea>"
+    + "</li>"
+    reviews_ul.appendChild(temp);
+
+}
+
 fetch_product(product_id);
+document.getElementById("radio_value").value = 1;
+document.getElementById("product_id_input").value = product_id;
+
 
