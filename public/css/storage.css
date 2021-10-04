@@ -21,10 +21,6 @@
     padding: 10px;
 }
 
-.info label,.info a{
-    padding:8px;
-}
-
 .item_image{
     width:240px;
     height: 180px;
@@ -54,6 +50,60 @@
 
 }
 
+#manufacturer{
+    font-size: 16px;
+    margin-top: auto;
+}
+
+#starimg{
+    width: 16px;
+    height: 16px;
+}
+
+#rating{
+    font-size: 16px;
+}
+
+#price{
+    margin: 20px 0px;
+}
+
 .single_item a{
     color:black;
+}
+
+#cat_label{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#sub_ul{
+    display: flex;
+    list-style-type: none;
+}
+
+.sub_cat_li{
+    padding: 20px 40px;
+    background:#1F2B3A;
+    border-radius: 4px;
+    margin: 10px 20px;
+}
+
+.sub_cat_li a{
+    color:white; 
+}
+
+#nav_history{
+    display: flex;
+    list-style-type: none;
+}
+
+.history_li{
+    margin: 0px 10px;
+    font-size: 16px;
+}
+
+.history_li a{
+    color:black;
+    font-size: 16px;
 }

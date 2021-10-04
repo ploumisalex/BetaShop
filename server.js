@@ -13,6 +13,7 @@ const methodOverride = require('method-override')
 const { resolveInclude } = require('ejs')
 
 const main_categories=["hobby","technology","fashion"]
+const sub_categories=["sports","men_fashion","women_fashion","televisions","mobile_phones","fitness","pc_hardware"]
 
 //connect to mongodb
 const mongoose = require('mongoose')
@@ -33,68 +34,6 @@ initialize_passport(
     email => findUser(email),
     id => findUserId(id)
 )
-
-async function findUser(email){
-    return new Promise((resolve, reject) => {
-        const query = Customer.findOne({'email': email});
-        query.select('id username email password cart');
-        query.exec((err,result)=>{
-            if(err) {
-                reject(err);
-            }
-            resolve(result);           
-        })
-    })
-}
-
-async function getReviewsByPId(pid){
-    return new Promise((resolve,reject)=>{
-        const query = Review.find({ 'product_id': pid},{_id: 0,customer_id: 1, review: 1,stars :1 })
-        query.exec((err,result)=>{
-            if(err){
-                reject(err)
-            }
-            resolve(result)
-        })
-    })
-}
-
-async function findUserId(id){
-    return new Promise((resolve, reject) => {
-        const query = Customer.findById(id);
-        query.select('id username email password cart');
-        query.exec((err,result)=>{
-            if(err) {
-                reject(err);
-            }
-            resolve(result);
-        })
-    })
-}
-
-async function getUsernameById(id){
-    return new Promise((resolve,reject)=>{
-        const query = Customer.find({ '_id': id},{_id: 0,username: 1 })
-        query.exec((err,result)=>{
-            if(err){
-                reject(err)
-            }
-            resolve(result[0].username)
-        })
-    })
-}
-
-async function getSubCategoriesFromCategory(cat){
-    return new Promise((resolve,reject)=>{
-        const query = Product.distinct('sub_category',{'category': cat})
-        query.exec((err,result)=>{
-            if(err){
-                reject(err)
-            }
-            resolve(result)
-        })
-    })
-}
 
 app.set('view-engine','ejs')
 app.use(express.urlencoded({extended: false}))
@@ -136,29 +75,44 @@ app.get('/register', checkNotAuthenticated , (req,res)=>{
 })
 
 app.get('/storage', async (req,res)=>{
-    if(main_categories.includes("fashion")){
-        let temp = await getSubCategoriesFromCategory("fashion")
-    }
     if (req.isAuthenticated()){
-        res.render('storage.ejs', {category:req.query.category , name : req.user.username})
+        if(main_categories.includes(req.query.category)){
+            let temp = await getSubCategoriesFromCategory(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null, name : req.user.username})
+        }else if(sub_categories.includes(req.query.category)){
+            let temp = await getSubCategoryProducts(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp, name : req.user.username})
+        }else{
+            res.redirect('/')
+        }
     }else{
-        res.render('storage.ejs', {category:req.query.category , name : null})
+        if(main_categories.includes(req.query.category)){
+            let temp = await getSubCategoriesFromCategory(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null, name : null})
+        }else if(sub_categories.includes(req.query.category)){
+            let temp = await getSubCategoryProducts(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp, name : null})
+        }else{
+            res.redirect('/')
+        }
     }
 })
 
 app.get('/product', async (req,res)=>{
-    var temp = await getReviewsByPId(req.query.product_id)
+    var temp = await getReviewsByPId(req.query.pid)
     for (let i = 0; i < temp.length; i++) {
-        temp[0].customer_id = await getUsernameById(temp[0].customer_id)
+        temp[i].customer_id = await getUsernameById(temp[i].customer_id)
     }
+    var prod = await findProductById(req.query.pid)
+    var relatedp = await Product.aggregate([{ $sample: { size: 3 }}])
     if (req.isAuthenticated()){
-        res.render('product.ejs', {product_id:req.query.product_id , name : req.user.username, reviews : temp})
+        res.render('product.ejs', {product: prod[0] , name : req.user.username, reviews : temp, related: relatedp})
     }else{
-        res.render('product.ejs', {product_id:req.query.product_id , name : null , reviews: temp})
+        res.render('product.ejs', {product: prod[0] , name : null , reviews: temp, related: relatedp})
     }
 })
 
-app.post('/product',(req,res)=>{
+app.post('/product',async (req,res)=>{
     if (req.isAuthenticated()){
         if(typeof(req.query.review) !== 'undefined'){
             let review = new Review({
@@ -168,23 +122,23 @@ app.post('/product',(req,res)=>{
                 stars : req.body.rv
             })
             review.save().then(()=>{
-                res.redirect('/product?product_id='+req.body.pid)
+                res.redirect('/product?pid='+req.body.pid)
             }).catch((err)=>{
                 console.log(err)
             })
         }else{
             Customer.updateOne({'_id' : req.user.id},
-            {$push: {'cart': {prod_id:req.query.product_id,count:req.body.ammount}}}).then(()=>{
-                res.render('product.ejs', {product_id:req.query.product_id , name : req.user.username})
+            {$push: {'cart': {prod_id:req.query.pid,count: 1}}}).then(()=>{
+                res.redirect('/product?pid='+req.query.pid)
             }).catch((err)=>{
                 console.log(err)
             })
         }
     }else{
         if(typeof(req.query.review) !== 'undefined'){
-            res.render('login.ejs')
+            res.redirect('/login')
         }else{
-            res.render('product.ejs', {product_id:req.query.product_id , name : null})
+            res.redirect('/product?pid='+req.query.pid)
         }
     }
 })
@@ -215,18 +169,26 @@ app.delete('/logout', (req,res) => {
 
 app.get('/cart',async (req,res) => {
     if (req.isAuthenticated()){
-        if(typeof(req.query.remove_prod) !== 'undefined'){
-            Customer.updateOne({'_id': req.user.id},{$pull:{cart: { prod_id: req.query.remove_prod}}}).then(()=>{
-                findUserId(req.user.id).then((result)=>{
-                    res.render('cart.ejs', {name : req.user.username,cart: result.cart})
+        if(typeof(req.query.rp) !== 'undefined'){
+            Customer.updateOne({'_id': req.user.id},{$pull:{cart: { prod_id: req.query.rp}}}).then(()=>{
+                findUserId(req.user.id).then(async (result)=>{
+                    var custom_cart = result.cart;
+                    for (let i = 0; i < result.cart.length; i++) {
+                        custom_cart[i].product = await findProductById(result.cart[i].prod_id);
+                    }
+                    res.render('cart.ejs', {name : req.user.username,cart: custom_cart})
                 }).catch(err=>{
                     console.log(err)
                 })}).catch((err)=>{
                     console.log(err)
                 })
         }else{
-            findUserId(req.user.id).then((result)=>{
-                res.render('cart.ejs', {name : req.user.username,cart: result.cart})
+            findUserId(req.user.id).then(async (result)=>{
+                var custom_cart = result.cart;
+                for (let i = 0; i < result.cart.length; i++) {
+                    custom_cart[i].product = await findProductById(result.cart[i].prod_id);
+                }
+                res.render('cart.ejs', {name : req.user.username,cart: custom_cart})
             }).catch(err=>{
                 console.log(err)
             })
@@ -235,7 +197,10 @@ app.get('/cart',async (req,res) => {
     }else{
         res.redirect('/login')
     }
+})
 
+app.post('/cart',(req,res)=>{
+    res.redirect('/');
 })
 
 app.get('/contact',async (req,res) => {
@@ -276,6 +241,92 @@ function checkNotAuthenticated(req,res,next){
     }
     next()
 
+}
+
+async function findUser(email){
+    return new Promise((resolve, reject) => {
+        const query = Customer.findOne({'email': email});
+        query.select('id username email password cart');
+        query.exec((err,result)=>{
+            if(err) {
+                reject(err);
+            }
+            resolve(result);           
+        })
+    })
+}
+
+async function getReviewsByPId(pid){
+    return new Promise((resolve,reject)=>{
+        const query = Review.find({ 'product_id': pid},{_id: 0,customer_id: 1, review: 1,stars :1 })
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
+}
+
+async function findUserId(id){
+    return new Promise((resolve, reject) => {
+        const query = Customer.findById(id);
+        query.select('id username email password cart');
+        query.exec((err,result)=>{
+            if(err) {
+                reject(err);
+            }
+            resolve(result);
+        })
+    })
+}
+
+async function findProductById(id){
+    return new Promise((resolve, reject) => {
+        const query = Product.find({ '_id': id},{})
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
+}
+
+async function getUsernameById(id){
+    return new Promise((resolve,reject)=>{
+        const query = Customer.find({ '_id': id},{_id: 0,username: 1 })
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result[0].username)
+        })
+    })
+}
+
+async function getSubCategoryProducts(cat){
+    return new Promise((resolve,reject)=>{
+        const query = Product.find({ 'sub_category': cat},{})
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
+}
+
+async function getSubCategoriesFromCategory(cat){
+    return new Promise((resolve,reject)=>{
+        const query = Product.distinct('sub_category',{'category': cat})
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
 }
 
 
