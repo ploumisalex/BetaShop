@@ -3,15 +3,26 @@
     display: flex;
     border-radius: 2px;
     background: #F3F3F3;
-    margin: 10px;
     flex-direction: column;
+}
+
+#filters_div{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-right: 20px;
+}
+
+#filters_and_products{
+    display: flex;
+    margin: 40px 0px;
 }
 
 #products{
     display: flex;
     flex-direction: column;
     list-style-type: none;
-    margin: 10px;
+    flex: 4;
 }
 
 .info{
@@ -41,13 +52,11 @@
 }
 
 .single_item{
-    margin: 8px;
     border-top: 3px solid #E8E8E8;
     display:flex;
     justify-content: space-between;
     background: white;
     padding: 20px;
-
 }
 
 #manufacturer{
@@ -106,4 +115,37 @@
 .history_li a{
     color:black;
     font-size: 16px;
+}
+
+.filters_form{
+    display: flex;
+    flex-direction: column;
+    margin-right: 40px;
+}
+
+.filters_form select{
+    margin-bottom: 40px;
+}
+
+.filters_form button{
+    padding: 0px 20px;
+}
+
+#manufacturer_list{
+    margin-bottom: 40px;
+    list-style-type: none;
+}
+
+.filters_form label{
+    font-size: 16px;
+}
+
+#filters_label{
+    margin-bottom: 40px;
+    font-size: 24px;
+}
+
+.mli label{
+    margin-left: 16px;
+    font-size: 18px;
 }

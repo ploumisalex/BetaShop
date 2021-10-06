@@ -13,7 +13,7 @@ const methodOverride = require('method-override')
 const { resolveInclude } = require('ejs')
 
 const main_categories=["hobby","technology","fashion"]
-const sub_categories=["sports","men_fashion","women_fashion","televisions","mobile_phones","fitness","pc_hardware"]
+const sub_categories=["sports","men_fashion","women_fashion","televisions","mobile_phones","fitness","pc_hardware","jewellery","laptops"]
 
 //connect to mongodb
 const mongoose = require('mongoose')
@@ -27,6 +27,7 @@ const Customer = require("./models/customers")
 const Message = require("./models/messages.js")
 const Review = require("./models/reviews.js")
 const Product = require("./models/products.js")
+const { query } = require('express')
 
 //initialize passport for login auth
 initialize_passport(
@@ -75,26 +76,63 @@ app.get('/register', checkNotAuthenticated , (req,res)=>{
 })
 
 app.get('/storage', async (req,res)=>{
-    if (req.isAuthenticated()){
-        if(main_categories.includes(req.query.category)){
-            let temp = await getSubCategoriesFromCategory(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null, name : req.user.username})
-        }else if(sub_categories.includes(req.query.category)){
-            let temp = await getSubCategoryProducts(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp, name : req.user.username})
-        }else{
-            res.redirect('/')
-        }
+    let requsername = null;
+    if(req.isAuthenticated()){
+        requsername = req.user.username
+    }
+    if(main_categories.includes(req.query.category)){
+        let temp = await getSubCategoriesFromCategory(req.query.category)
+        res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null,manu_table: null, name : requsername})
+    }else if(sub_categories.includes(req.query.category)){
+        let temp = await getSubCategoryProducts(req.query.category)
+        let temp2 = await getManufacturerList(req.query.category)
+        res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp,manu_table: temp2, name : requsername})
     }else{
-        if(main_categories.includes(req.query.category)){
-            let temp = await getSubCategoriesFromCategory(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null, name : null})
-        }else if(sub_categories.includes(req.query.category)){
-            let temp = await getSubCategoryProducts(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp, name : null})
-        }else{
-            res.redirect('/')
+        res.redirect('/')
+    }
+})
+
+app.post('/storage',async (req,res)=>{
+    let requsername = null;
+    if( req.isAuthenticated()){
+        requsername = req.user.username
+    }
+    let querysort = null;
+    let querycategory = {};
+    switch(req.body.sortid) {
+        case 'pa':
+            querysort = {price: 1};
+            break;
+        case 'pd':
+            querysort = {price: -1};
+            break;
+        case 'ra':
+            querysort = {rating: 1};
+            break;
+        case 'rd':
+            querysort = {rating: -1};
+            break;
+        case 'p':
+            querysort = {'rating.count' : -1};
+            break;
+    }
+    if(req.body.mval != 'all'){
+       querycategory = {'manufacturer' : req.body.mval};
+    }
+    if (querysort != null){
+        Product.aggregate(
+            [{ $match: { $and:[querycategory, { 'sub_category' : req.query.category}]}},
+            { $sort: querysort}
+          ]).then(async (resu)=>{
+            let temp = await getManufacturerList(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: resu,manu_table: temp, name : requsername})
+          }).catch((err)=>{console.log(err)})
         }
+    else{
+        Product.find({$and: [{'sub_category' : req.query.category}, querycategory]}).then( async (resu)=>{
+            let temp = await getManufacturerList(req.query.category)
+            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: resu,manu_table: temp, name : requsername})
+          }).catch((err)=>{console.log(err)})
     }
 })
 
@@ -114,7 +152,7 @@ app.get('/product', async (req,res)=>{
 
 app.post('/product',async (req,res)=>{
     if (req.isAuthenticated()){
-        if(typeof(req.query.review) !== 'undefined'){
+        if(typeof(req.query.review) !== 'undefined' && req.query.review == 'true'){
             let review = new Review({
                 customer_id : req.user.id,
                 product_id : req.body.pid,
@@ -329,22 +367,40 @@ async function getSubCategoriesFromCategory(cat){
     })
 }
 
+async function getManufacturerList(cat){
+    return new Promise((resolve,reject)=>{
+        const query = Product.distinct('manufacturer',{'sub_category': cat})
+        query.exec((err,result)=>{
+            if(err){
+                reject(err)
+            }
+            resolve(result)
+        })
+    })
+}
 
-/*for (let i = 0; i < fake_products.length; i++) {
-        let product = new Product({
-            category : fake_products[i].category,
-            sub_category : fake_products[i].sub_category,
-            title : fake_products[i].title,
-            price : fake_products[i].price,
-            manufacturer : fake_products[i].manufacturer,
-            description : fake_products[i].description,
-            rating: fake_products[i].rating,
-            img : fake_products[i].img,
-            stock : fake_products[i].stock,
-        });
-        product.save().then(()=>{
-            console.log("komple mallon")
-        }).catch((err)=>{
-            console.log(err);
-        });
-      }*/
+/*for (let i = 0; i < tempprods.length; i++) {
+    let product = new Product({
+        category : tempprods[i].category,
+        sub_category : tempprods[i].sub_category,
+        title : tempprods[i].title,
+        price : tempprods[i].price,
+        manufacturer : tempprods[i].manufacturer,
+        description : tempprods[i].description,
+        rating: tempprods[i].rating,
+        img : tempprods[i].img,
+        stock : tempprods[i].stock,
+    });
+    product.save().then(()=>{
+        console.log("komple mallon")
+    }).catch((err)=>{
+        console.log(err);
+    });
+  }*/
+
+/*Product.aggregate([
+    { $match: {'sub_category': 'laptops' } },
+    { $sort: {'rating.count' : 1}}
+    ]).then((resu)=>{
+        console.log(resu)
+    }).catch((err)=>{console.log(err)})*/

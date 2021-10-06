@@ -44,17 +44,44 @@
         <% if (sub_table != null) { %>
             <label id="access_sub" hidden><%=JSON.stringify(sub_table)%></label>
             <label id="access_prods" hidden>null</label>
+            <label id="access_manu" hidden>null</label>
         <% } else if( product_table != null){ %>
             <label id="access_sub" hidden>null</label>
             <label id="access_prods" hidden><%= JSON.stringify(product_table) %></label>
+            <label id="access_manu" hidden><%= JSON.stringify(manu_table) %></label>
         <% } %>
         <ul id="sub_ul">
 
         </ul>
-        <ul id="products">
-                
-        </ul>
+        <div id="filters_and_products">
+            <div id="filters_div">
+                <label id="filters_label">Filters</label>
+                <form method="POST" class="filters_form">
+                    <label>Select manufacturer</label>
+                    <ul id="manufacturer_list">
+                        <li class="mli">
+                            <input type="radio" name="same" id="all" onclick="change_manu_val('all')" checked>
+                            <label for="all">all</label>
+                        </li>
+                    </ul>
+                    <input type="hidden" id="mval" name="mval" value="all">
+                    <label for="sort_id">Sort products</label>
+                    <select id="sort_id" name="sortid" >
+                        <option value="" disabled selected>Sort by</option>
+                        <option value="p">Popularity</option>
+                        <option value="pa">Price ascending</option>
+                        <option value="pd">Price descending</option>
+                        <option value="ra">Rating ascending</option>
+                        <option value="rd">Rating descending</option>
+                      </select>
+                    <button type="submit">Apply filters</button>
 
+                </form>
+            </div>
+            <ul id="products">
+                
+            </ul>
+        </div>
     </div>
     <footer class="footer">
         <div id="upper_footer">

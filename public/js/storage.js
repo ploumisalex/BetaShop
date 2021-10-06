@@ -3,7 +3,10 @@ var category_variable = document.getElementById("access").innerHTML;
 var sub_category_ul = document.getElementById("sub_ul");
 var sub_categories = JSON.parse(document.getElementById("access_sub").innerHTML);
 var product_table = JSON.parse(document.getElementById("access_prods").innerHTML);
+var manufacturer_table = JSON.parse(document.getElementById("access_manu").innerHTML);
 var nav_history_ul = document.getElementById("nav_history");
+var manufacturer_ul = document.getElementById("manufacturer_list");
+var filters_div = document.getElementById("filters_div");
 
 function search_function(){
     window.location.href = "/product?pid=" + document.getElementById("id_value").value;
@@ -20,7 +23,7 @@ function create_product(prod){
     + "<a href='" + title_link + "'>"+prod.title+"</a>"
     + "<label id='rating'>"+ prod.rating.rate + " <img id='starimg' src='imgs/star.png'' alt='Item'> out of "+prod.rating.count+" reviews</label>"
     + "<label id='price'>"+ prod.price + " $</label>"
-    + "<label id='manufacturer'>Made by"+ prod.manufacturer + "</label>"
+    + "<label id='manufacturer'>Made by "+ prod.manufacturer + "</label>"
     + "</div>"
     + "</li>";
     product_list.appendChild(liel);
@@ -29,11 +32,13 @@ function create_product(prod){
 
 function showcase(){
     if(sub_categories!= null){
+        filters_div.innerHTML = "";
         showcase_categories();
         create_history_li(category_variable);
     }
     else if(product_table != null){
         showcase_products();
+        create_radio_buttons(manufacturer_table);
         create_history_li(product_table[0].category);
         create_history_li(category_variable);
     }
@@ -72,6 +77,26 @@ function create_history_li(data){
     + "</li>";
     nav_history_ul.appendChild(lielprior);
     nav_history_ul.appendChild(liel);
+}
+
+function create_radio_buttons(table){
+    for (let i = 0; i < table.length; i++) {
+        create_radio_button(table[i]);
+      }
+}
+
+function create_radio_button(el){
+    const liel = document.createElement("li");
+    const temp = "change_manu_val('"+el+"')";
+    liel.innerHTML = "<li class='mli'>"
+    + "<input type='radio' name='same' id='"+el+"'onclick="+temp+">"
+    + "<label for='"+el+"'> "+ el +"</label>"
+    + "</li>";
+    manufacturer_ul.appendChild(liel);
+}
+
+function change_manu_val(val){
+    document.getElementById("mval").value = val;
 }
 
 showcase();
