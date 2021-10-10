@@ -15,12 +15,7 @@ const related_num = 3; //number of shown related products
 var product_category = null;
 
 function search_function(){
-    var temp = document.getElementById("id_value").value;
-    if (isNaN(temp)){
-        console.log("bro");
-    }else{
-        window.location.href = "/product?pid=" +temp;
-    }
+    window.location.href = "/search?t=" + document.getElementById("search_value").value;
 }
 
 function create_and_show_product(prod){
@@ -121,8 +116,8 @@ function fill(num){
 }
 
 function show_reviews(){
+    reviews_ul.innerHTML = "";
     if(reviews_p.length == 0){
-        reviews_ul.innerHTML = "";
         var temp = document.createElement("li");
         temp.innerHTML = "<li>There are no reviews of this product. Be the first to review this item!</li>"
         reviews_ul.appendChild(temp);

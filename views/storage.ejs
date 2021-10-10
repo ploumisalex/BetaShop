@@ -30,7 +30,7 @@
             <a class="nav_ref" href="/storage?category=fashion">Fashion</a>
             <a class="nav_ref" href="/storage?category=hobby">Hobby</a>   
             <div class="search">
-                <input type="number" placeholder="Product id" id="id_value"><br>
+                <input type="text" minlength="3" autocomplete="off" id="search_value"><br>
                 <button id="search_button" onclick="search_function()">Search</button>
             </div>        
             <a class="nav_ref" href="/contact">Contact Us</a>
@@ -44,11 +44,9 @@
         <% if (sub_table != null) { %>
             <label id="access_sub" hidden><%=JSON.stringify(sub_table)%></label>
             <label id="access_prods" hidden>null</label>
-            <label id="access_manu" hidden>null</label>
         <% } else if( product_table != null){ %>
             <label id="access_sub" hidden>null</label>
             <label id="access_prods" hidden><%= JSON.stringify(product_table) %></label>
-            <label id="access_manu" hidden><%= JSON.stringify(manu_table) %></label>
         <% } %>
         <ul id="sub_ul">
 
@@ -56,7 +54,7 @@
         <div id="filters_and_products">
             <div id="filters_div">
                 <label id="filters_label">Filters</label>
-                <form method="POST" class="filters_form">
+                <div class="filters_form">
                     <label>Select manufacturer</label>
                     <ul id="manufacturer_list">
                         <li class="mli">
@@ -74,9 +72,8 @@
                         <option value="ra">Rating ascending</option>
                         <option value="rd">Rating descending</option>
                       </select>
-                    <button type="submit">Apply filters</button>
-
-                </form>
+                    <button id="applyfilters" onclick="filter_products()">Apply Filters</button>
+                    </div>
             </div>
             <ul id="products">
                 

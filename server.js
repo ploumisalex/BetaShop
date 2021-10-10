@@ -82,58 +82,29 @@ app.get('/storage', async (req,res)=>{
     }
     if(main_categories.includes(req.query.category)){
         let temp = await getSubCategoriesFromCategory(req.query.category)
-        res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null,manu_table: null, name : requsername})
+        res.render('storage.ejs', {category:req.query.category ,sub_table: temp,product_table: null, name : requsername})
     }else if(sub_categories.includes(req.query.category)){
         let temp = await getSubCategoryProducts(req.query.category)
-        let temp2 = await getManufacturerList(req.query.category)
-        res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp,manu_table: temp2, name : requsername})
+        res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: temp, name : requsername})
     }else{
         res.redirect('/')
     }
 })
 
 app.post('/storage',async (req,res)=>{
+    console.log("lmao never")
+})
+
+app.get('/search',async (req,res)=>{
     let requsername = null;
-    if( req.isAuthenticated()){
+    if(req.isAuthenticated()){
         requsername = req.user.username
     }
-    let querysort = null;
-    let querycategory = {};
-    switch(req.body.sortid) {
-        case 'pa':
-            querysort = {price: 1};
-            break;
-        case 'pd':
-            querysort = {price: -1};
-            break;
-        case 'ra':
-            querysort = {rating: 1};
-            break;
-        case 'rd':
-            querysort = {rating: -1};
-            break;
-        case 'p':
-            querysort = {'rating.count' : -1};
-            break;
-    }
-    if(req.body.mval != 'all'){
-       querycategory = {'manufacturer' : req.body.mval};
-    }
-    if (querysort != null){
-        Product.aggregate(
-            [{ $match: { $and:[querycategory, { 'sub_category' : req.query.category}]}},
-            { $sort: querysort}
-          ]).then(async (resu)=>{
-            let temp = await getManufacturerList(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: resu,manu_table: temp, name : requsername})
-          }).catch((err)=>{console.log(err)})
-        }
-    else{
-        Product.find({$and: [{'sub_category' : req.query.category}, querycategory]}).then( async (resu)=>{
-            let temp = await getManufacturerList(req.query.category)
-            res.render('storage.ejs', {category:req.query.category ,sub_table: null,product_table: resu,manu_table: temp, name : requsername})
-          }).catch((err)=>{console.log(err)})
-    }
+    Product.find({"title" : {$regex : req.query.t , $options: 'i' }}).then((result) =>{
+        res.render('storage.ejs', {category: "search" ,sub_table: null,product_table: result, name : requsername})
+    }).catch((err) =>{
+        console.log(err)
+    })
 })
 
 app.get('/product', async (req,res)=>{
@@ -142,7 +113,7 @@ app.get('/product', async (req,res)=>{
         temp[i].customer_id = await getUsernameById(temp[i].customer_id)
     }
     var prod = await findProductById(req.query.pid)
-    var relatedp = await Product.aggregate([{ $sample: { size: 3 }}])
+    var relatedp = await Product.aggregate([{ $match: { sub_category: prod[0].sub_category }},{ $sample: { size: 3 }}])
     if (req.isAuthenticated()){
         res.render('product.ejs', {product: prod[0] , name : req.user.username, reviews : temp, related: relatedp})
     }else{
@@ -378,6 +349,8 @@ async function getManufacturerList(cat){
         })
     })
 }
+
+
 
 /*for (let i = 0; i < tempprods.length; i++) {
     let product = new Product({

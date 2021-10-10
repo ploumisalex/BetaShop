@@ -5,3 +5,7 @@ var inform = document.getElementById("inform");
     //inform.innerHTML = "Thank you for sending us a message!";
 
 //}
+
+function search_function(){
+    window.location.href = "/search?t=" + document.getElementById("search_value").value;
+}

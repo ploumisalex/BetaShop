@@ -1,4 +1,4 @@
 
 function search_function(){
-    window.location.href = "/product?pid=" + document.getElementById("id_value").value;
+    window.location.href = "/search?t=" + document.getElementById("search_value").value;
 }

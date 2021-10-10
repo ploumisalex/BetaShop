@@ -94,7 +94,7 @@ header{
     display: flex;
 }
 
-.search input[type=submit],.search input[type=number]{
+.search input[type=submit],.search input[type=text]{
     padding: 0px 5px;
     
 }

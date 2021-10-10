@@ -4,9 +4,8 @@ var total_cost = 0;
 const cart_list = document.getElementById("cart_products");
 
 function search_function(){
-    window.location.href = "/product?pid=" + document.getElementById("id_value").value;
+    window.location.href = "/search?t=" + document.getElementById("search_value").value;
 }
-
 function show_products(){
     for (let i = 0; i < cart.length; i++) {
         show_product(cart[i].product[0],cart[i].count);
