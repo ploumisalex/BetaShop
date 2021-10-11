@@ -9,6 +9,11 @@ var filters_div = document.getElementById("filters_div");
 var all_manufacturers = [];
 var manufacturer_filter = "all";
 
+var min_price_input = document.getElementById("min_price_input");
+var price_range = document.getElementById("min_price");
+var min_price_value = 10000;
+var max_price_value = 1;
+
 function search_function(){
     window.location.href = "/search?t=" + document.getElementById("search_value").value;
 }
@@ -39,6 +44,7 @@ function showcase(){
     }
     else if(product_table != null){
         find_distinct_manufacturers();
+        find_minmax_price();
         showcase_products();
         if(category_variable != "search"){
             create_history_li(product_table[0].category);
@@ -47,17 +53,35 @@ function showcase(){
     }
 }
 
+function find_minmax_price(){
+    for (let i = 0; i < product_table.length; i++) {
+       if(product_table[i].price < min_price_value){
+           min_price_value = Math.floor(product_table[i].price);
+       }else if(product_table[i].price > max_price_value){
+        max_price_value = Math.ceil(product_table[i].price);
+       }
+    }
+    price_range.max = max_price_value;
+    price_range.min = min_price_value;
+    price_range.value = min_price_value;
+    min_price_input.max = max_price_value;
+    min_price_input.min = min_price_value;
+    min_price_input.value = min_price_value;
+}
+
 function showcase_products(){
     product_list.innerHTML = "";
     if(product_table.length != 0){
         for (let i = 0; i < product_table.length; i++) {
             if(manufacturer_filter != "all"){
-                if(product_table[i].manufacturer == manufacturer_filter){
+                if((product_table[i].manufacturer == manufacturer_filter) && (product_table[i].price >= min_price_value)){
                     create_product(product_table[i]);
                 }
             }
             else{
-                create_product(product_table[i]);
+                if(product_table[i].price >= min_price_value){
+                    create_product(product_table[i]);
+                }
             }
         }
     }
@@ -79,7 +103,7 @@ function create_cat(data){
     const liel = document.createElement("li");
     var href_link = "/storage?category="+data;
     liel.innerHTML = "<li class='sub_cat_li'>"
-    + "<a href='" + href_link + "'>"+data+"</a>"
+    + "<a href='" + href_link + "'><img src='./imgs/"+data+".jpeg'>"+data+"</a>"
     + "</li>";
     sub_category_ul.appendChild(liel);
 }
@@ -129,7 +153,6 @@ function find_distinct_manufacturers(){
 function filter_products(){
     switch(document.getElementById("sort_id").value){
         case "":
-            console.log("no filter selected")
             break;
         case "p":
             product_table.sort(function(a, b) {
@@ -159,5 +182,12 @@ function filter_products(){
     }
     showcase_products();
 }
+
+function change_min_price(val){
+    price_range.value = val;
+    min_price_input.value = val;
+    min_price_value = val;
+}
+
 
 showcase();

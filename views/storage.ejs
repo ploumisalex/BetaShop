@@ -25,13 +25,10 @@
             <a href="/cart" class="cart"><img src="imgs/cart.png"></a>
         </div>  
         <ul class="nav_bar">
-            <a class="nav_ref" href="/">Home</a>
-            <a class="nav_ref" href="/storage?category=technology">Technology</a>
-            <a class="nav_ref" href="/storage?category=fashion">Fashion</a>
-            <a class="nav_ref" href="/storage?category=hobby">Hobby</a>   
+            <a class="nav_ref" href="/">Home</a>  
             <div class="search">
                 <input type="text" minlength="3" autocomplete="off" id="search_value"><br>
-                <button id="search_button" onclick="search_function()">Search</button>
+                <button id="search_button" onclick="search_function()"><img src="imgs/search.png"></button>
             </div>        
             <a class="nav_ref" href="/contact">Contact Us</a>
         </ul> 
@@ -71,9 +68,14 @@
                         <option value="pd">Price descending</option>
                         <option value="ra">Rating ascending</option>
                         <option value="rd">Rating descending</option>
-                      </select>
+                    </select>
+                    <label for="price_range">Price Range</label>
+                    <span class="price_range">
+                        <input id="min_price_input" type="number" min="1" max="50" value="5" onchange="change_min_price(this.value)">
+                        <input id="min_price" type="range" min="1" max="50" value="5" onchange="change_min_price(this.value)">
+                    </span>
                     <button id="applyfilters" onclick="filter_products()">Apply Filters</button>
-                    </div>
+                </div>
             </div>
             <ul id="products">
                 

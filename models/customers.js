@@ -16,6 +16,9 @@ const customers_schema = new Schema({
     },
     cart:{
         type: Array
+    },
+    icon:{
+        type: String
     }
 },{timestamps: true });
 

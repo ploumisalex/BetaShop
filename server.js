@@ -54,10 +54,10 @@ app.use('/js', express.static(__dirname +'public/js'))
 
 app.get('/', (req,res)=>{
     if (req.isAuthenticated()){
-        res.render('index.ejs', {name : req.user.username})
+        res.render('index.ejs', {name : req.user.username, main_cat_table: main_categories})
     }else{
         //req.session.cart = [];
-        res.render('index.ejs', {name : null})
+        res.render('index.ejs', {name : null, main_cat_table: main_categories})
     }
 })
 
@@ -158,7 +158,8 @@ app.post('/register', checkNotAuthenticated , async (req,res)=>{
             username : req.body.name,
             email : req.body.email,
             password : hashed_password,
-            cart : []
+            cart : [],
+            icon : "https://www.vhv.rs/dpng/d/479-4793444_gasp-twitch-emote-twitch-blue-face-emote-hd.png"
         });
         customer.save().then(()=>{
             res.redirect('/login');

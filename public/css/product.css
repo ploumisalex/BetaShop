@@ -2,11 +2,6 @@
     text-align: center;
 }
 
-.nav_ref{
-    padding: 0px 20px;
-    text-decoration: none;
-    color: white;
-}
 .error p{
     text-align: center;
 }
@@ -103,11 +98,12 @@
     margin: 20px 10px;
     display: flex;
     flex-direction: column;
+    background: white;
 }
 
 #related_span{
     text-align: center;
-    border-bottom: 3px solid #E8E8E8;
+    border-bottom: 3px solid #F1F1F1;
 }
 
 #related_ul{
@@ -145,10 +141,6 @@
 .related_li img{
     max-width:100%;
     max-height:100%;
-}
-
-#reviews{
-    border-top: 3px solid #E8E8E8;
 }
 
 #leave_review{
