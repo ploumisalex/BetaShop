@@ -53,12 +53,17 @@ function showcase(){
     }
 }
 
+function topFunction() {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  }
+
 function find_minmax_price(){
     for (let i = 0; i < product_table.length; i++) {
        if(product_table[i].price < min_price_value){
            min_price_value = Math.floor(product_table[i].price);
        }else if(product_table[i].price > max_price_value){
-        max_price_value = Math.ceil(product_table[i].price);
+        max_price_value = Math.floor(product_table[i].price);
        }
     }
     price_range.max = max_price_value;

@@ -103,7 +103,8 @@
 
 #related_span{
     text-align: center;
-    border-bottom: 3px solid #F1F1F1;
+    background: #F1F1F1;
+    padding-bottom: 20px;
 }
 
 #related_ul{
@@ -118,8 +119,8 @@
     flex-direction: column;
     width: 180px;
     height: 300px;
-    margin: 10px 50px;
-    padding: 24px;
+    margin: 0px 50px;
+    padding: 16px;
     background: white;
 }
 

@@ -44,6 +44,10 @@ header{
     color:orange;
 }
 
+#fakelos:hover{
+    text-decoration: none;
+}
+
 #user_name{
     flex: 1;
     text-align: center;
@@ -186,8 +190,8 @@ input::-webkit-inner-spin-button {
 }
 
 #content{
-    width:1400px;
-    margin: 10px auto;
+    padding: 0px 240px;
+    margin: 64px 0px;
     display: flex;
     flex-direction: column;
 }
@@ -207,22 +211,34 @@ input::-webkit-inner-spin-button {
     display:flex;
     flex-direction: column;
     align-items: center;
-    background: #1F2B3A;
-    color:white;
+    color:black;
+    background: #E8E8E8;
+}
+
+#backtotop{
+    background: none;
+    border: none;
+    text-decoration: underline;
+    margin: 20px 0px;
+}
+
+#backtotop:hover{
+    cursor: pointer;
 }
 
 #upper_footer{
     flex: 3;
     display: flex;
+    padding: 40px;
 }
 
 #copyright{
     flex: 1;
-    text-align: center;
     width: 100%;
-    padding: 10px 0px;
-    margin-top: 10px;
-    background:black;
+    text-align: center;
+    padding: 20px 0px;
+    color: black;
+    background: #F1F1F1;
 }
 
 
@@ -231,61 +247,58 @@ input::-webkit-inner-spin-button {
     list-style-type: none;
 }
 
-.socials a{
-    margin: 10px 0px;
-}
-
 .socials li{
-    margin: 10px 10px;
+    margin-right: 20px;
 }
 
 #contact_socials{
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin: 0px 10px;
+    margin: 0px 40px;
 }
 
 .socials i{
-    color:white;
-    font-size: 24px;
+    color:black;
 }
 
 #contact{
-    color:white;
+    color:black;
     margin: 10px 0px;
-    font-size: 24px;
 }
 
 .socials{
     display:flex;
 }
 
+.who p{
+    font-size: 16px;
+}
+
 .who{
     display: flex;
     flex-direction: column;
-    margin: 0px 10px;
+    margin: 0px 40px;
     flex: 1;
-    align-items: center;
 }
 
 .who label{
-    font-size: 24px;
     margin: 10px 0px;
 }
 
 .offer{
     flex: 1;
-    align-items:center;
     display: flex;
     flex-direction: column;
-    margin: 0px 10px;
+    margin: 0px 40px;
 }
 
 .offer label{
-    font-size: 24px;
     margin: 10px 0px;
+}
+
+.offer p{
+    font-size: 16px;
 }
 
 .offer ul{

@@ -12,7 +12,7 @@
 <body>
     <header>
         <div id="header_div">
-            <span id="fakelos">Fakelos</span>
+            <a href="/" id="fakelos">Fakelos</a>
             <% if (name != null) { %>
                 <span id="user_name">Hello, <%= name %></span>
                 <form action="/logout?_method=DELETE" method="POST" id="logout_form">
@@ -92,6 +92,7 @@
         </div>
     </div>
     <footer class="footer">
+        <button onclick="topFunction()" id="backtotop">Go back to top</button>
         <div id="upper_footer">
             <div class="who">
                 <label>Who Am I</label>
