@@ -28,7 +28,3 @@ To run BetaShop locally, follow these steps:
 - Node.js
 - Express
 - MongoDB
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
