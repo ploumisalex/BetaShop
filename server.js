@@ -7,6 +7,7 @@ const app = express()
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const initialize_passport = require('./passport-config')
+const dburi = require('./config');
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -17,7 +18,7 @@ const sub_categories=["sports","men_fashion","women_fashion","televisions","mobi
 
 //connect to mongodb
 const mongoose = require('mongoose')
-const dburi = "mongodb+srv://fakelos:adminofakelos@customersdb.gjnea.mongodb.net/customers_table?retryWrites=true&w=majority"
+
 mongoose.connect(dburi,{useNewUrlParser: true, useUnifiedTopology: true}).then((result)=>{
     app.listen(process.env.PORT || 4000)
 }).catch((err)=>{
@@ -92,7 +93,7 @@ app.get('/storage', async (req,res)=>{
 })
 
 app.post('/storage',async (req,res)=>{
-    console.log("lmao never")
+    console.log("Never")
 })
 
 app.get('/search',async (req,res)=>{
@@ -353,24 +354,9 @@ async function getManufacturerList(cat){
 
 
 
-/*for (let i = 0; i < tempprods.length; i++) {
-    let product = new Product({
-        category : tempprods[i].category,
-        sub_category : tempprods[i].sub_category,
-        title : tempprods[i].title,
-        price : tempprods[i].price,
-        manufacturer : tempprods[i].manufacturer,
-        description : tempprods[i].description,
-        rating: tempprods[i].rating,
-        img : tempprods[i].img,
-        stock : tempprods[i].stock,
-    });
-    product.save().then(()=>{
-        console.log("komple mallon")
-    }).catch((err)=>{
-        console.log(err);
-    });
-  }*/
+
+
+
 
 /*Product.aggregate([
     { $match: {'sub_category': 'laptops' } },

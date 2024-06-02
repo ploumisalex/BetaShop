@@ -382,3 +382,24 @@ const fake_products = [{
     img:"https://c.scdn.gr/images/sku_main_images/025636/25636603/20201215162058_amd_ryzen_9_5900x_box.jpeg",
     stock: 31
 }]
+
+
+
+for (let i = 0; i < tempprods.length; i++) {
+    let product = new Product({
+        category : tempprods[i].category,
+        sub_category : tempprods[i].sub_category,
+        title : tempprods[i].title,
+        price : tempprods[i].price,
+        manufacturer : tempprods[i].manufacturer,
+        description : tempprods[i].description,
+        rating: tempprods[i].rating,
+        img : tempprods[i].img,
+        stock : tempprods[i].stock,
+    });
+    product.save().then(()=>{
+        console.log("Created")
+    }).catch((err)=>{
+        console.log(err);
+    });
+  }
